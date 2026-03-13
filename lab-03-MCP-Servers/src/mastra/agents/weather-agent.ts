@@ -1,5 +1,6 @@
 import { Agent } from '@mastra/core/agent';
 import { Memory } from '@mastra/memory';
+import { LibSQLVector } from '@mastra/libsql';
 import { weatherTool } from '../tools/weather-tool';
 
 export const weatherAgent = new Agent({
@@ -18,5 +19,18 @@ export const weatherAgent = new Agent({
   `,
   model: 'openai/gpt-4.1-mini',
   tools: { weatherTool },
-  memory: new Memory(),
+  memory: new Memory({
+    vector: new LibSQLVector({
+      id: 'weather-agent-vector',
+      url: 'file:./mastra.db',
+    }),
+    embedder: 'openai/text-embedding-3-small',
+    options: {
+      semanticRecall: {
+        topK: 3,
+        messageRange: 2,
+        scope: 'resource',
+      },
+    },
+  }),
 });

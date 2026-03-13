@@ -32,13 +32,13 @@ The agent won't know which city you mean — it has no memory of the previous me
 Update `src/mastra/agents/weather-agent.ts`:
 
 ```typescript
-import { Agent } from '@mastra/core/agent';
-import { Memory } from '@mastra/memory';
-import { weatherTool } from '../tools/weather-tool';
+import { Agent } from "@mastra/core/agent";
+import { Memory } from "@mastra/memory";
+import { weatherTool } from "../tools/weather-tool";
 
 export const weatherAgent = new Agent({
-  id: 'weather-agent',
-  name: 'Weather Agent',
+  id: "weather-agent",
+  name: "Weather Agent",
   instructions: `
     You are a helpful weather assistant that provides accurate weather information.
 
@@ -50,7 +50,7 @@ export const weatherAgent = new Agent({
 
     Use the weatherTool to fetch current weather data.
   `,
-  model: 'openai/gpt-4.1-mini',
+  model: "openai/gpt-4.1-mini",
   tools: { weatherTool },
   memory: new Memory(),
 });
@@ -61,14 +61,15 @@ export const weatherAgent = new Agent({
 Update `src/mastra/index.ts`:
 
 ```typescript
-import { Mastra } from '@mastra/core/mastra';
-import { LibSQLStore } from '@mastra/libsql';
-import { weatherAgent } from './agents/weather-agent';
+import { Mastra } from "@mastra/core/mastra";
+import { LibSQLStore } from "@mastra/libsql";
+import { weatherAgent } from "./agents/weather-agent";
 
 export const mastra = new Mastra({
   agents: { weatherAgent },
   storage: new LibSQLStore({
-    url: 'file:./mastra.db',
+    id: "mastra-storage",
+    url: "file:./mastra.db",
   }),
 });
 ```
@@ -86,31 +87,38 @@ Try starting a new conversation with a different `threadId` — the threads shou
 
 ### Step 5: Semantic Recall
 
-Semantic recall uses vector embeddings to find relevant information from past conversations based on meaning. It's enabled by default when memory is configured. You can customize its behavior:
+Semantic recall uses vector embeddings to find relevant information from past conversations based on meaning. Enabling it requires a vector store and an embedder:
 
 ```typescript
-memory: new Memory({
-  options: {
-    semanticRecall: {
-      topK: 3,           // Number of similar messages to retrieve (default: 3)
-      messageRange: 2,    // Messages before/after each match for context (default: 2)
-      scope: 'resource',  // 'thread' (current thread only) or 'resource' (across all threads for the user)
+import { Agent } from "@mastra/core/agent";
+import { Memory } from "@mastra/memory";
+import { LibSQLVector } from "@mastra/libsql";
+import { weatherTool } from "../tools/weather-tool";
+
+export const weatherAgent = new Agent({
+  id: "weather-agent",
+  name: "Weather Agent",
+  instructions: `...`,
+  model: "openai/gpt-4.1-mini",
+  tools: { weatherTool },
+  memory: new Memory({
+    vector: new LibSQLVector({
+      id: "weather-agent-vector",
+      url: "file:./mastra.db",
+    }),
+    embedder: "openai/text-embedding-3-small",
+    options: {
+      semanticRecall: {
+        topK: 3,           // Number of similar messages to retrieve (default: 4)
+        messageRange: 2,    // Messages before/after each match for context (default: 1)
+        scope: "resource",  // 'thread' (current thread only) or 'resource' (across all threads for the user)
+      },
     },
-  },
-}),
+  }),
+});
 ```
 
-You can also configure the embedder:
-
-```typescript
-import { ModelRouterEmbeddingModel } from '@mastra/core/llm';
-
-memory: new Memory({
-  embedder: new ModelRouterEmbeddingModel('openai/text-embedding-3-small'),
-}),
-```
-
-To disable semantic recall (e.g., for latency-sensitive use cases):
+To disable semantic recall explicitly (e.g., for latency-sensitive use cases):
 
 ```typescript
 memory: new Memory({
@@ -133,6 +141,7 @@ memory: new Memory({
 ```
 
 OM works in three tiers:
+
 1. **Recent messages** — exact conversation history for the current exchange
 2. **Observations** — the Observer agent compresses older messages into concise notes
 3. **Reflections** — the Reflector condenses observations when they accumulate
@@ -197,6 +206,7 @@ memory: new Memory({
 ```
 
 Working memory has two scopes:
+
 - **`resource`** (default) — persists across all threads for the same user
 - **`thread`** — isolated per conversation thread
 

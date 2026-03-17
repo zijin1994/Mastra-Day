@@ -8,6 +8,7 @@ import { WeatherGuardrail } from '../processors/weather-guardrail';
 
 export const weatherAgent = new Agent({
   id: 'weather-agent',
+  description: 'Specializes in fetching and reporting real-time weather data for any location using weather tools and MCP services.',
   name: 'Weather Agent',
   instructions: `
     You are a helpful weather assistant that provides accurate weather information.
@@ -19,9 +20,9 @@ export const weatherAgent = new Agent({
     - Keep responses concise but informative
 
     Use the weatherTool to fetch current weather data.
-    You also have access to additional weather tools via MCP for alerts and extended forecasts.
+    You also have access to additional weather tools via MCP for forecasts, geocoding, air quality, and historical data.
   `,
-  model: 'openai/gpt-4.1-mini',
+  model: 'openai/gpt-5-mini',
   tools: { weatherTool, ...mcpTools },
   memory: new Memory({
     vector: new LibSQLVector({
@@ -40,7 +41,7 @@ export const weatherAgent = new Agent({
   inputProcessors: [
     new WeatherGuardrail(),
     new PIIDetector({
-      model: 'openai/gpt-4.1-mini',
+      model: 'openai/gpt-5-mini',
       strategy: 'redact',
       detectionTypes: ['email', 'phone', 'credit-card'],
       redactionMethod: 'mask',

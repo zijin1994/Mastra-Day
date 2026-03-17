@@ -1,9 +1,23 @@
-import type { Processor, ProcessInputArgs, MastraMessageV2 } from '@mastra/core';
+import type { Processor, ProcessInputArgs, ProcessInputResult } from '@mastra/core/processors';
+import { Agent } from '@mastra/core/agent';
+import { z } from 'zod';
+
+const classifierSchema = z.object({
+  isWeatherQuery: z.boolean().describe('true if the user is asking about weather, temperature, forecast, or conditions'),
+  hasLocation: z.boolean().describe('true if a specific city, region, or place is mentioned in the current message or conversation context'),
+});
+
+const classifierAgent = new Agent({
+  id: 'weather-classifier',
+  name: 'Weather Classifier',
+  model: 'openai/gpt-5-mini',
+  instructions: 'You analyze user messages and conversation context for a weather assistant. Determine if the message is weather-related and if a location is specified.',
+});
 
 export class WeatherGuardrail implements Processor {
   id = 'weather-guardrail';
 
-  async processInput({ messages, abort }: ProcessInputArgs): Promise<MastraMessageV2[]> {
+  async processInput({ messages, abort }: ProcessInputArgs): Promise<ProcessInputResult> {
     const lastMessage = messages[messages.length - 1];
     if (!lastMessage || lastMessage.role !== 'user') {
       return messages;
@@ -12,23 +26,25 @@ export class WeatherGuardrail implements Processor {
     const text = lastMessage.content.parts
       ?.filter((part): part is { type: 'text'; text: string } => part.type === 'text')
       .map((part) => part.text)
-      .join(' ')
-      .toLowerCase();
+      .join(' ');
 
     if (!text) {
       return messages;
     }
 
-    const hasWeatherIntent =
-      /weather|temperature|forecast|rain|snow|wind|humid|sunny|cloudy|storm/.test(text);
-    const hasLocation = /in\s+\w+|at\s+\w+|\b[A-Z][a-z]+(?:\s+[A-Z][a-z]+)*\b/.test(
-      lastMessage.content.parts
+    const recentMessages = messages.slice(-6).map((msg) => {
+      const content = msg.content.parts
         ?.filter((part): part is { type: 'text'; text: string } => part.type === 'text')
         .map((part) => part.text)
-        .join(' ') || '',
-    );
+        .join(' ');
+      return `${msg.role}: ${content}`;
+    }).join('\n');
 
-    if (hasWeatherIntent && !hasLocation) {
+    const response = await classifierAgent.generate(recentMessages, {
+      structuredOutput: { schema: classifierSchema },
+    });
+
+    if (response.object?.isWeatherQuery && !response.object?.hasLocation) {
       abort('Please include a city or location in your weather query.');
     }
 

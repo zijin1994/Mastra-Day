@@ -165,7 +165,7 @@ execute: async (inputData, context) => { ... }
 
 ## Getting help
 
-1. **Check official migration docs**: `https://mastra.ai/llms.txt` → Migrations section
+1. **Check official migration docs**: `https://mastra.ai/llms.txt` -> Migrations section
 2. **Look up new APIs**: See [`embedded-docs.md`](embedded-docs.md)
 3. **Check for errors**: See [`common-errors.md`](common-errors.md)
 4. **Ask in Discord**: https://discord.gg/BTYqqHKUrf

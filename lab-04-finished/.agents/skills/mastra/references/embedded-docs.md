@@ -30,29 +30,16 @@ node_modules/@mastra/core/dist/docs/
 ls node_modules/@mastra/
 ```
 
-If you see packages like `core`, `memory`, `rag`, etc., proceed with embedded docs lookup.
-
 ### 2. Look through topic docs
-
-Use `grep` to find relevant docs in `references/`:
 
 ```bash
 grep -r "Agent" node_modules/@mastra/core/dist/docs/references
 ```
 
-### Optional: Check source code for type definitions / additional details
-
-Look at the `SOURCE_MAP.json` to find the file path for the export:
+### Optional: Check source code for type definitions
 
 ```bash
 cat node_modules/@mastra/core/dist/docs/assets/SOURCE_MAP.json | grep '"Agent"'
-```
-
-Returns: `{ "Agent": { "types": "dist/agent/agent.d.ts", ... } }`
-
-Read the type definition for exact constructor parameters, types, and JSDoc:
-
-```bash
 cat node_modules/@mastra/core/dist/agent/agent.d.ts
 ```
 
@@ -65,32 +52,6 @@ cat node_modules/@mastra/core/dist/agent/agent.d.ts
 | `@mastra/rag`    | `node_modules/@mastra/rag/dist/docs/`    | RAG features, vector stores               |
 | `@mastra/pg`     | `node_modules/@mastra/pg/dist/docs/`     | PostgreSQL storage                        |
 | `@mastra/libsql` | `node_modules/@mastra/libsql/dist/docs/` | LibSQL/SQLite storage                     |
-
-## Quick commands reference
-
-```bash
-# List installed @mastra packages
-ls node_modules/@mastra/
-
-# List available topic documentation
-ls node_modules/@mastra/core/dist/docs/references/
-
-# Find specific export in SOURCE_MAP
-cat node_modules/@mastra/core/dist/docs/assets/SOURCE_MAP.json | grep '"ExportName"'
-
-# Read type definition from path
-cat node_modules/@mastra/core/dist/[path-from-source-map]
-
-# View package overview
-cat node_modules/@mastra/core/dist/docs/SKILL.md
-```
-
-## When embedded docs are not available
-
-If packages aren't installed or `dist/docs/` doesn't exist:
-
-1. **Recommend installation**: Suggest installing packages to access embedded docs
-2. **Fall back to remote docs**: See `references/remote-docs.md`
 
 ## Best Practices
 

@@ -1,4 +1,4 @@
-# lab-03-finished
+# lab-04-finished
 
 Welcome to your new [Mastra](https://mastra.ai/) project! We're excited to see what you'll build.
 

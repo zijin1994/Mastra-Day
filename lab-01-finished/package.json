@@ -1,5 +1,5 @@
 {
-  "name": "lab-01-finished",
+  "name": "lab-03-finished",
   "version": "1.0.0",
   "description": "",
   "main": "index.js",
@@ -17,7 +17,10 @@
     "node": ">=22.13.0"
   },
   "dependencies": {
-    "@mastra/core": "^1.12.0",
+    "@mastra/core": "^1.13.2",
+    "@mastra/libsql": "^1.7.0",
+    "@mastra/mcp": "^1.2.1",
+    "@mastra/memory": "^1.8.2",
     "zod": "^4.3.6"
   },
   "devDependencies": {

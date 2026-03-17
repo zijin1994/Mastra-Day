@@ -472,8 +472,8 @@ Error: Invalid model format
 
 ```typescript
 const agent = new Agent({
-  model: "openai/gpt-5.2", // ✅ Correct
-  // NOT: model: 'gpt-5.2'       // ❌ Missing provider
+  model: "openai/gpt-5.2", // Correct
+  // NOT: model: 'gpt-5.2'       // Missing provider
 });
 ```
 

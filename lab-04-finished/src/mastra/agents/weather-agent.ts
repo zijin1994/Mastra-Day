@@ -5,6 +5,7 @@ import { PIIDetector } from '@mastra/core/processors';
 import { weatherTool } from '../tools/weather-tool';
 import { mcpTools } from '../mcp/mcp-client';
 import { WeatherGuardrail } from '../processors/weather-guardrail';
+import { scorers } from '../scorers/weather-scorer';
 
 export const weatherAgent = new Agent({
   id: 'weather-agent',
@@ -19,9 +20,9 @@ export const weatherAgent = new Agent({
     - Keep responses concise but informative
 
     Use the weatherTool to fetch current weather data.
-    You also have access to additional weather tools via MCP for alerts and extended forecasts.
+    You also have access to additional weather tools via MCP for forecasts, geocoding, air quality, and historical data.
   `,
-  model: 'openai/gpt-4.1-mini',
+  model: 'openai/gpt-5-mini',
   tools: { weatherTool, ...mcpTools },
   memory: new Memory({
     vector: new LibSQLVector({
@@ -40,10 +41,24 @@ export const weatherAgent = new Agent({
   inputProcessors: [
     new WeatherGuardrail(),
     new PIIDetector({
-      model: 'openai/gpt-4.1-mini',
+      model: 'openai/gpt-5-mini',
       strategy: 'redact',
       detectionTypes: ['email', 'phone', 'credit-card'],
       redactionMethod: 'mask',
     }),
   ],
+  scorers: {
+    toolCallAccuracy: {
+      scorer: scorers.toolCallAccuracyScorer,
+      sampling: { type: 'ratio', rate: 1 },
+    },
+    completeness: {
+      scorer: scorers.completenessScorer,
+      sampling: { type: 'ratio', rate: 1 },
+    },
+    translation: {
+      scorer: scorers.translationScorer,
+      sampling: { type: 'ratio', rate: 1 },
+    },
+  },
 });

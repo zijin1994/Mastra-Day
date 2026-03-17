@@ -1,4 +1,4 @@
-# Lab 06: Evals and Scorers
+# Lab 04: Evals and Scorers
 
 In this lab, you'll add evaluation scorers to measure the quality of your agent's responses, plus logging and observability for tracing.
 

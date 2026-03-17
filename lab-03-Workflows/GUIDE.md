@@ -1,4 +1,4 @@
-# Lab 05: Workflows
+# Lab 03: Workflows
 
 In this lab, you'll create a multi-step workflow that fetches weather data and uses the agent to suggest activities based on the forecast.
 

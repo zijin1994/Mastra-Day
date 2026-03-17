@@ -1,4 +1,4 @@
-# Lab 04: Guardrails & Processors
+# Lab 02: Guardrails & Processors
 
 ## What Are Guardrails?
 
@@ -62,7 +62,7 @@ export const weatherAgent = new Agent({
 - Send: `"What's the weather like? My email is john@example.com"`
 - Check the **terminal** for `[PIIDetector] Redacted PII: PII detected. Types: email` — this confirms the processor ran
 - The agent's response should not reference the email, since it was redacted before reaching the LLM
-- Note: Studio shows the original message you typed, not the redacted version. In Lab 06 we'll add logging and observability for better visibility into processor activity
+- Note: Studio shows the original message you typed, not the redacted version. In Lab 04 we'll add logging and observability for better visibility into processor activity
 
 ## Step 2: Understand Tripwires (Blocked Requests)
 

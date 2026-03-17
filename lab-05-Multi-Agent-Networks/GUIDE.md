@@ -1,4 +1,4 @@
-# Lab 07: Multi-Agent Networks
+# Lab 05: Multi-Agent Networks
 
 In this lab, you'll create multiple specialized agents and coordinate them through a supervisor agent that delegates tasks to the right specialist.
 

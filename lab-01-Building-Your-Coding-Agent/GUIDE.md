@@ -287,7 +287,7 @@ export const codingAgent = new Agent({
 Restart the dev server and try:
 
 1. "Read the file calculator.ts" — the agent should call the `read-file` tool and show you the contents
-2. "Can you find any bugs in that file?" — the agent should identify the bug in the `subtract` function (it uses `a + b` instead of `a - b`)
+2. "Read calculator.ts and check for any bugs" — the agent should read the file and identify the bug in the `subtract` function (it uses `a + b` instead of `a - b`)
 3. "Read the test file calculator.test.ts" — the agent should show the test file
 
 > **Think about it:** This tool can only *read* files. The agent can spot the bug in `subtract`, but it can't fix it. What would you need to add to make CodeBuddy a full coding assistant? (We'll solve this in Lab 02 with Workspaces.)

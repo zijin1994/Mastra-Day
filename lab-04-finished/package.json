@@ -1,34 +1,17 @@
 {
-  "name": "lab-06-finished",
+  "name": "lab-04-finished",
   "version": "1.0.0",
-  "description": "",
-  "main": "index.js",
-  "scripts": {
-    "test": "echo \"Error: no test specified\" && exit 1",
-    "dev": "mastra dev",
-    "build": "mastra build",
-    "start": "mastra start"
-  },
-  "keywords": [],
-  "author": "",
-  "license": "ISC",
+  "private": true,
   "type": "module",
-  "engines": {
-    "node": ">=22.13.0"
+  "scripts": {
+    "dev": "mastra dev",
+    "build": "mastra build"
   },
   "dependencies": {
     "@mastra/core": "^1.13.2",
-    "@mastra/evals": "^1.1.2",
     "@mastra/libsql": "^1.7.0",
-    "@mastra/loggers": "^1.0.2",
-    "@mastra/mcp": "^1.2.1",
     "@mastra/memory": "^1.8.2",
-    "@mastra/observability": "^1.4.0",
+    "@mastra/mcp": "^1.2.1",
     "zod": "^4.3.6"
-  },
-  "devDependencies": {
-    "@types/node": "^25.5.0",
-    "mastra": "^1.3.9",
-    "typescript": "^5.9.3"
   }
 }

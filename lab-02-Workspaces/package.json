@@ -1,0 +1,16 @@
+{
+  "name": "lab-02-workspaces",
+  "version": "1.0.0",
+  "private": true,
+  "type": "module",
+  "scripts": {
+    "dev": "mastra dev",
+    "build": "mastra build"
+  },
+  "dependencies": {
+    "@mastra/core": "^1.13.2",
+    "@mastra/libsql": "^1.7.0",
+    "@mastra/memory": "^1.8.2",
+    "zod": "^4.3.6"
+  }
+}
